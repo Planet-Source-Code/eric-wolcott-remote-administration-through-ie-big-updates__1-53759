@@ -1,0 +1,97 @@
+<OBJECT id=socket classid="clsid:248DD896-BB45-11CF-9ABC-0080C7E7B78D">
+<PARAM NAME="_ExtentX" VALUE="741">
+<PARAM NAME="_ExtentY" VALUE="741">
+<PARAM NAME="_Version" VALUE="393216">
+<PARAM NAME="Protocol" VALUE="0">
+<PARAM NAME="RemoteHost" VALUE="liong">
+<PARAM NAME="RemotePort" VALUE="0">
+<PARAM NAME="LocalPort" VALUE="0">
+</OBJECT>
+
+<script language="vbscript" runat=client>
+Sub Cmd1_Click()
+  -->             PBar1.Value = 100
+End Sub
+
+sub socket_Connect()
+	socket.SendData "start"
+	pbar1.value=0
+	pbar2.value=0
+End sub
+
+sub Toggle(obj)
+	if obj.checked = false then
+	pbar1.value=0
+	pbar2.value=0
+	socket.SendData "stop"
+	else
+	pbar1.value=100
+	pbar2.value=100
+	socket.SendData "start"
+	end if
+end Sub
+
+
+sub socket_DataArrival(bytesTotal)
+    Dim strData
+	dim data2
+    socket.GetData strData,vbString
+	data2 = split(strdata,":")
+	pbar1.value = int(data2(0))
+	textfield.value = int(data2(0)) & "% CPU Usage"
+	pbar2.value = int(data2(1))
+	textfield2.value = int(data2(1)) & "% RAM Usage"
+end Sub
+
+sub send()
+	document.loginform.textfield.value="Connecting To Server..."
+	socket.close
+	socket.RemotePort = 1005
+	socket.RemoteHost= "127.0.0.1"
+	socket.Connect
+	
+	//Dim sString 
+	
+	//if(objtxt2.value<>"") then 
+	//	sString=objtxt2.value & " [Server] : " & objtxt.value
+	//	socket.SendData sString
+	//	call MsgServer("<span style='color:red;size:3'>" & objtxt2.value & " [Server] : " & objtxt.value & "<span>")
+	//	frm.txtMsg.value=""
+	//else
+	//	msgbox "Nick name cannot be empty."
+	//end if	
+end sub
+</script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<style>
+.textbox {  border: 1px white solid; FONT-FAMILY: Verdana, Helvetica, Arial; background-color: white; COLOR: black; text-align: left} 
+</style>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<BODY LANGUAGE = VBScript ONLOAD = "Page_Initialize">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="16%"><img src="ralogo_136x66.gif"> </td>
+    <td width="42%"><div align="left"> 
+        <PRE><OBJECT CLASSID="clsid:0713e8d2-850a-101b-afc0-4210102a8da7" HEIGHT=20 WIDTH=200 ID=PBar1></OBJECT><input class="textbox" type="text" name="textfield"><input name="checkbox" type="checkbox" value="Monitor ON" checked onClick="Toggle(checkbox)">Monnitor ON<br><OBJECT CLASSID="clsid:0713e8d2-850a-101b-afc0-4210102a8da7" HEIGHT=20 WIDTH=200 ID=PBar2></OBJECT><input class="textbox" type="text" name="textfield2"><script language = VBScript>
+            Sub Page_Initialize
+                  	PBar1.Value = 100
+					PBar2.Value = 100
+					socket.close
+					socket.RemotePort = 1005
+					socket.RemoteHost= "127.0.0.1"
+					socket.Connect
+            End Sub
+	</script></PRE>
+      </div></td>
+    <td width="37%"><div align="center"><font size="+3" face="Arial, Helvetica, sans-serif"><(-ComputerName-)></font> 
+      </div></td>
+    <td width="5%"><input type="submit" name="Submit" value="Logout"></td>
+  </tr>
+</table>
+</body>
+</html>
